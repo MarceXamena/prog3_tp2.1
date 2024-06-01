@@ -1,4 +1,24 @@
-class Sensor {}
+class Sensor {
+    constructor(datos){
+        this.id = datos.id;
+        this.name = datos.nombre;
+         /*
+        Validar el tipo de sensor
+        */
+        const permitiedType = ['temperature', 'humiditi', 'pressure'];
+        if (!permitiedType.includes(datos.type)) {
+            console.log('Sensor no válido: ${datos.type}. Solo se permite ${permitiedType.join(', ')}');
+        }
+        this.type = datos.type;
+        this.value = datos.value;
+        this.unit = datos.unit;
+        this.update_at = datos.update_at;
+    }
+    set updateValue(valores){
+        this.value = valores.value;
+        this.update_at = valores.update_at;
+    }
+}
 
 class SensorManager {
     constructor() {
