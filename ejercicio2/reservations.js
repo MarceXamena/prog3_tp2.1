@@ -1,5 +1,4 @@
 class Customer {
-    // constructor
     constructor(id, name, email) {
         this.id = id;
         this.name = name;
@@ -17,12 +16,10 @@ class Reservation {
         this.date = new Date(date);
         this.guests = guests;
     }
-    // Propiedad computada info
     get info(){
         return `Datos de la reserva:\nFecha y hora: ${this.date}.\nCliente: ${this.customer.info}.\nCantidad de comensales: ${this.guests}.`
     }
 
-    // Método estático para validar
     static validate(reservationDate, reservationGuests){
         const currentDate = new Date();
         reservationDate = new Date(reservationDate);
