@@ -154,8 +154,8 @@ class MemoryGame {
     resetGame() {
         this.flippedCards = [];
         this.matchedCards = [];
-        this.moveCount = 0;
-        this.moveCountElement.textContent = `Movimientos: ${this.moveCount}`;
+        this.moveCount = 0;  // Reiniciar contador
+        this.moveCountElement.textContent = `Movimientos: ${this.moveCount}`; // Mostrar contador en 0
         this.board.flipDownAllCards();
         this.board.reset();
     }
