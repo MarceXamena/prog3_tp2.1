@@ -5,7 +5,7 @@ class Customer {
         this.email = email;
     }
     get info(){
-        return `Nombre del cliente: ${this.name}. Email: ${this.email}`
+        return `${this.name} - Email: ${this.email}`
     }
 }
 
@@ -17,7 +17,7 @@ class Reservation {
         this.guests = guests;
     }
     get info(){
-        return `Datos de la reserva:\nFecha y hora: ${this.date}.\nCliente: ${this.customer.info}.\nCantidad de comensales: ${this.guests}.`
+        return `Fecha y hora: ${this.date} - Cliente: ${this.customer.info} - Personas: ${this.guests}.`
     }
 
     static validate(reservationDate, reservationGuests){
@@ -92,7 +92,7 @@ document
             restaurant.addReservation(reservation);
             restaurant.render();
         } else {
-            alert("Datos de reserva inválidos");
+            alert("Error en datos de reserva");
             return;
         }
     });
@@ -106,5 +106,5 @@ if (Reservation.validateReservation(reservation1.date, reservation1.guests)) {
     restaurant.addReservation(reservation1);
     restaurant.render();
 } else {
-    alert("Datos de reserva inválidos");
+    alert("Error en datos de reserva");
 }
