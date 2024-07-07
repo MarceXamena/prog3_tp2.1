@@ -92,7 +92,7 @@ document
             restaurant.addReservation(reservation);
             restaurant.render();
         } else {
-            alert("Error en datos de reserva");
+            alert("Datos de reserva inválidos");
             return;
         }
     });
@@ -106,5 +106,5 @@ if (Reservation.validateReservation(reservation1.date, reservation1.guests)) {
     restaurant.addReservation(reservation1);
     restaurant.render();
 } else {
-    alert("Error en datos de reserva");
+    alert("Datos de reserva inválidos");
 }
