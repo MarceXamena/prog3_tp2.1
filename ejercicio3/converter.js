@@ -39,25 +39,19 @@ class CurrencyConverter {
             
     }
     getExchangeRateDifference() {
-        const yesterday = new Date(Date.now() - 864e5).toISOString().split('T')[0];
-    
-        return fetch(`${this.apiUrl}/${yesterday}..`)
-            .then(response => response.json())
-            .then(data => {
-                const rates = data.rates;
-                const yesterdayRates = rates[Object.keys(rates)[0]];
-                const todayRates = rates[Object.keys(rates)[1]];
-    
-                let difference = {};
-    
-                for (const currencyCode in yesterdayRates) {
-                    const yesterdayRate = yesterdayRates[currencyCode];
-                    const todayRate = todayRates[currencyCode];
-                    difference[currencyCode] = todayRate - yesterdayRate;
-                }
-    
-                return difference;
-            })
+        const today = new Date().toISOString().split('T')[0];
+        const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+        return Promise.all([
+            fetch(`${this.apiUrl}/${yesterday}`).then(response => response.json()),
+            fetch(`${this.apiUrl}/${today}`).then(response => response.json())
+        ]).then(([yesterdayData, todayData]) => {
+            const yesterdayRate = yesterdayData.rates[toCurrency];
+            const todayRate = todayData.rates[toCurrency];
+            return todayRate - yesterdayRate;
+        });
+        
+
             
     }
     
@@ -70,54 +64,48 @@ document.addEventListener("DOMContentLoaded", () => {
     const differencesDiv = document.getElementById("difference");
     const fromCurrencySelect = document.getElementById("from-currency");
     const toCurrencySelect = document.getElementById("to-currency");
-    
+
     const converter = new CurrencyConverter("https://api.frankfurter.app");
 
-    // Obtener lista de monedas
     converter.getCurrencies().then(() => {
         populateCurrencies(fromCurrencySelect, converter.currencies);
         populateCurrencies(toCurrencySelect, converter.currencies);
     });
 
-    // Manejar la conversion de moneda al enviar
     form.addEventListener("submit", async (event) => {
-        event.preventDefault(); 
+        event.preventDefault();
 
-        const amount = document.getElementById("amount").value; 
+        const amount = document.getElementById("amount").value;
         const fromCurrency = converter.currencies.find(
-            (currency) => currency.code === fromCurrencySelect.value
+            currency => currency.code === fromCurrencySelect.value
         );
         const toCurrency = converter.currencies.find(
-            (currency) => currency.code === toCurrencySelect.value 
+            currency => currency.code === toCurrencySelect.value
         );
 
-        
         const convertedAmount = await converter.convertCurrency(amount, fromCurrency, toCurrency);
 
-        // Mostrar resultado
         if (convertedAmount !== null && !isNaN(convertedAmount)) {
             resultDiv.textContent = `${amount} ${fromCurrency.code} equivale a ${convertedAmount.toFixed(2)} ${toCurrency.code}`;
         } else {
             resultDiv.textContent = "Error al realizar la conversión.";
         }
 
-        // Diferencias de tasa de cambio en nuevo div
         const differences = await converter.getExchangeRateDifference();
         if (differences !== null) {
             let result = [];
             for (const currencyCode in differences) {
-                result.push(`${currencyCode}: ${differences[currencyCode]}<br>`);
+                result.push(`${currencyCode}: ${differences[currencyCode].toFixed(4)}<br>`);
             }
-            differencesDiv.innerHTML = result.join(''); 
+            differencesDiv.innerHTML = result.join('');
         } else {
             differencesDiv.textContent = "Error al obtener las diferencias de tasa de cambio.";
         }
     });
 
- 
     function populateCurrencies(selectElement, currencies) {
         if (currencies) {
-            currencies.forEach((currency) => {
+            currencies.forEach(currency => {
                 const option = document.createElement("option");
                 option.value = currency.code;
                 option.textContent = `${currency.code} - ${currency.name}`;
@@ -126,3 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 });
+
+
+
