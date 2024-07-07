@@ -133,7 +133,7 @@ class MemoryGame {
             this.flippedCards.push(card);
             this.moveCount++;
             this.moveCountElement.textContent = `Movimientos: ${this.moveCount}`;
-            
+
             if (this.flippedCards.length === 2) {
                 setTimeout(() => this.checkForMatch(), this.flipDuration);
             }
@@ -154,6 +154,8 @@ class MemoryGame {
     resetGame() {
         this.flippedCards = [];
         this.matchedCards = [];
+        this.moveCount = 0;
+        this.moveCountElement.textContent = `Movimientos: ${this.moveCount}`;
         this.board.flipDownAllCards();
         this.board.reset();
     }
